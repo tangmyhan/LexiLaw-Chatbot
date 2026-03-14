@@ -27,5 +27,6 @@ class Settings(BaseSettings):
     # NEO4J_PASSWORD: str
 
     VECTOR_SEARCH_TOP_K: int = 10
+    ALLOW_ORIGINS: str = '*'
 
 settings = Settings()

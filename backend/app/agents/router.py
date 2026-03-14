@@ -1,4 +1,4 @@
-from app.core.llm import llm_model
+from app.core.llm import get_chat_model
 from app.agents.prompts import ROUTER_PROMPT
 
 class RouterAgent:
@@ -8,7 +8,8 @@ class RouterAgent:
             history_context = "Lịch sử gần đây:\n" + "\n".join([f"{m['role']}: {m['parts'][0]}" for m in history])
         
         prompt = f"{ROUTER_PROMPT}\n\n{history_context}\nCâu hỏi hiện tại: {user_query}"
-        response = await llm_model.generate_content_async(prompt)
+        model = get_chat_model("")  # Không cần system_instruction cho router
+        response = await model.generate_content_async(prompt)
         intent = response.text.strip().upper()
         return intent if intent in ["LEGAL_QUERY", "GENERAL_CHAT"] else "LEGAL_QUERY"
 

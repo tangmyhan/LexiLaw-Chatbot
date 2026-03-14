@@ -2,7 +2,7 @@ import asyncio
 from time import time
 from app.agents.router import router_agent
 from app.agents.researcher import ResearcherAgent
-from app.agents.prompts import MAIN_SYSTEM_PROMPT, RAG_SYSTEM_PROMPT
+from app.agents.prompts import MAIN_SYSTEM_PROMPT, RAG_SYSTEM_PROMPT, ANSWER_PROMPT
 from app.core.llm import get_chat_model  # Dùng wrapper mới
 from app.utils.sse_stream import SSEStream
 from app.db import add_chat_messages, get_chat_messages
