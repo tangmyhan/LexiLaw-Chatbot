@@ -30,4 +30,6 @@ class Settings(BaseSettings):
     VECTOR_SEARCH_TOP_K: int = 10
     ALLOW_ORIGINS: str = '*'
 
+    COHERE_API_KEY: str
+
 settings = Settings()

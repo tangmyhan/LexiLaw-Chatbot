@@ -32,19 +32,20 @@ class LegalAssistant:
             history_time = time() - start_time
             print(f"Thời gian lấy lịch sử: {history_time:.2f}s")
 
-            # 2. Phân loại ý định (Truyền thêm lịch sử để Router hiểu ngữ cảnh)
+            # 2. Phân loại ý định và gather context song song
             intent_start = time()
-            intent = await router_agent.classify_intent(message, formatted_history[-2:] if formatted_history else [])
+            # Chạy song song cả 2 tác vụ
+            intent_task = asyncio.create_task(router_agent.classify_intent(message, formatted_history[-2:] if formatted_history else []))
+            context_task = asyncio.create_task(self.researcher.gather_all_evidence(message))
+            
+            # Đợi cả 2 cùng xong
+            intent, context = await asyncio.gather(intent_task, context_task)
             intent_time = time() - intent_start
-            print(f"Thời gian phân loại intent: {intent_time:.2f}s")
+            print(f"Thời gian phân loại intent + gather context: {intent_time:.2f}s")
 
             # 3. Chuẩn bị System Instruction dựa trên Intent
             sys_inst = MAIN_SYSTEM_PROMPT
             if intent == "LEGAL_QUERY":
-                context_start = time()
-                context = await self.researcher.gather_all_evidence(message)
-                context_time = time() - context_start
-                print(f"Thời gian gather context: {context_time:.2f}s")
                 context_str = "\n".join([f"[{d['source']}]: {d['content']}" for d in context])
                 sys_inst = f"{RAG_SYSTEM_PROMPT}\n\nNGỮ CẢNH PHÁP LUẬT:\n{context_str}"
 
