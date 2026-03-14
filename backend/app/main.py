@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from app.api import router
 from app.core.config import settings
-from app.db import get_redis  
+from app.db import get_redis
 
 # Quản lý vòng đời ứng dụng (Lifespan)
 @asynccontextmanager

@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from sse_starlette.sse import EventSourceResponse
 
 from app.db import get_redis, create_chat, chat_exists
-from app.agents.manager import RAGAssistant
+from app.agents.assistant import LegalAssistant
 
 router = APIRouter()
 
@@ -40,7 +40,7 @@ async def chat(chat_id: str, chat_in: ChatIn):
     
     # Khởi tạo Assistant với logic Search -> Rerank -> Gemini
     # Chúng ta truyền Redis client vào để Assistant tự quản lý lịch sử
-    assistant = RAGAssistant(chat_id=chat_id, rdb=rdb)
+    assistant = LegalAssistant(chat_id=chat_id, rdb=rdb)
     
     # Hàm run của Assistant sẽ trả về một SSEStream object
     sse_stream = assistant.run(message=chat_in.message)
