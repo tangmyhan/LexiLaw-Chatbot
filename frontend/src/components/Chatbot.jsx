@@ -17,8 +17,8 @@ function Chatbot() {
     if (!trimmedMessage || isLoading) return;
 
     setMessages(draft => [...draft,
-      { role: 'user', content: trimmedMessage },
-      { role: 'assistant', content: '', sources: [], loading: true }
+    { role: 'user', content: trimmedMessage },
+    { role: 'assistant', content: '', sources: [], loading: true }
     ]);
     setNewMessage('');
 
@@ -52,9 +52,9 @@ function Chatbot() {
     <div className='relative grow flex flex-col gap-6 pt-6'>
       {messages.length === 0 && (
         <div className='mt-3 font-urbanist text-primary-blue text-xl font-light space-y-2'>
-          <p>👋 Welcome!</p>
-          <p>I am powered by the latest technology reports from leading institutions like the World Bank, the World Economic Forum, McKinsey, Deloitte and the OECD.</p>
-          <p>Ask me anything about the latest technology trends.</p>
+          <p>👋 Chào bạn!</p>
+          <p>Tôi là LexiLaw, trợ lý ảo dựa trên trí tuệ nhân tạo chuyên tư vấn các vấn đề liên quan đến Luật Lao động Việt Nam.</p>
+          <p>Bạn có câu hỏi hoặc cần giải đáp khúc mắc nào về luật lao động và các vấn đề liên quan không?</p>
         </div>
       )}
       <ChatMessages
