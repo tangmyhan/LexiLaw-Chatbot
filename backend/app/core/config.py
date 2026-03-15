@@ -23,9 +23,13 @@ class Settings(BaseSettings):
     # REDIS_URL: str = "redis://redis:6379/0"
 
     # # Neo4j (GraphRAG)
-    # NEO4J_URI: str
-    # NEO4J_USERNAME: str
-    # NEO4J_PASSWORD: str
+    NEO4J_URI: str
+    NEO4J_USERNAME: str
+    NEO4J_PASSWORD: str
+    NEO4J_DATABASE: str
+    AURA_INSTANCEID: str
+    AURA_INSTANCENAME: str
+
 
     VECTOR_SEARCH_TOP_K: int = 10
     ALLOW_ORIGINS: str = '*'

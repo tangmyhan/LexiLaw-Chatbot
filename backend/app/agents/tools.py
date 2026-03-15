@@ -1,6 +1,7 @@
 from app.services.qdrant_service import qdrant_legal_service
 from app.services.reranker import reranker_service
-# from app.services.neo4j import neo4j_service # Mở khi bạn đã build Graph
+from app.services.neo4j_service import neo4j_service
+from typing import List, Dict, Any
 
 class LegalTools:
     async def search_knowledge_base(self, query: str):
@@ -21,9 +22,14 @@ class LegalTools:
             })
         return formatted
 
-    async def search_graph_references(self, query: str):
-        """Dành cho GraphRAG - Tìm quan hệ dẫn chiếu (Neo4j)"""
-        # Logic gọi neo4j_service sẽ nằm ở đây
-        return []
+    async def search_graph_references(self, qdrant_hits: List[Any], limit_spans: int = 30) -> Dict[str, Any]:
+        """
+        Input: raw Qdrant hits => derive article_ids => expand graph context
+        Returns a dict that includes owner_spans, references, semantic nodes, mention_spans
+        """
+        article_ids = await neo4j_service.article_ids_from_qdrant_hits(qdrant_hits)
+        if not article_ids:
+            return {"owner_spans": [], "references": [], "semantics":{"concepts":[],"events":[],"actors":[],"penalties":[]}, "mention_spans":[]}
+        return await neo4j_service.expand_from_articles(article_ids, limit_spans=limit_spans)
 
 legal_tools = LegalTools()

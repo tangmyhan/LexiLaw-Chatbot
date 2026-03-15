@@ -2,15 +2,11 @@ import json
 from time import time
 from typing import List, Dict
 import redis.asyncio as redis
-from app.core.config import settings
+from app.core.redis import redis_client
 
-# Khởi tạo Redis connection pool
+# Sử dụng redis_client từ core/redis.py thay vì tạo mới
 def get_redis():
-    return redis.from_url(
-        settings.REDIS_URL,
-        decode_responses=True,
-        encoding="utf-8"
-    )
+    return redis_client
 
 async def create_chat(rdb: redis.Redis, chat_id: str, created_at: int):
     """Khởi tạo một phiên chat mới"""

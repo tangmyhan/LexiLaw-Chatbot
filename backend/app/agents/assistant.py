@@ -3,7 +3,7 @@ from time import time
 from app.agents.router import router_agent
 from app.agents.researcher import ResearcherAgent
 from app.agents.prompts import MAIN_SYSTEM_PROMPT, RAG_SYSTEM_PROMPT
-from app.core.llm import get_chat_model  # Dùng wrapper mới
+from app.core.llm import get_chat_model
 from app.utils.sse_stream import SSEStream
 from app.db import add_chat_messages, get_chat_messages
 
@@ -80,7 +80,10 @@ class LegalAssistant:
             print(f"Tổng thời gian: {total_time:.2f}s")
 
         except Exception as e:
-            await sse.send(f"Error: {str(e)}")
+            print(f"Error in conversation task: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            await sse.send(f"Lỗi: {str(e)}")
         finally:
             await sse.close()
 

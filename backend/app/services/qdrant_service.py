@@ -4,6 +4,13 @@ from app.core.config import settings
 from app.services.embedding import embedding_service
 
 class QdrantLegalService:
+    def __init__(self):
+        # Kiểm tra và in loại Qdrant đang dùng
+        if "qdrant.io" in settings.QDRANT_URL:
+            print("Đang sử dụng Qdrant Cloud")
+        else:
+            print("Đang sử dụng Qdrant Docker/Local")
+
     async def hybrid_search(self, query_text: str, top_k: int =settings.VECTOR_SEARCH_TOP_K):
         # Lấy Dense Vector
         dense_vector = await embedding_service.encode_query(query_text)

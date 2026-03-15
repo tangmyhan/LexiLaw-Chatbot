@@ -13,6 +13,7 @@
 import google.generativeai as genai
 from app.core.config import settings
 
+# Cấu hình Google AI SDK
 genai.configure(api_key=settings.GEMINI_API_KEY)
 
 def get_chat_model(system_instruction: str = None):
