@@ -10,25 +10,35 @@ import '@react-sigma/core/lib/style.css';
 
 // Styling Configuration matches URAxLaws
 const SCHEMA_STYLING = {
-  Document: { color: '#e74c3c', size: 15 },
-  Article: { color: '#3498db', size: 10 },
-  Clause: { color: '#8e44ad', size: 8 },
-  Point: { color: '#9b59b6', size: 7 },
-  Span: { color: '#95a5a6', size: 5 },
-  LegalConcept: { color: '#2ecc71', size: 12 },
-  Penalty: { color: '#f1c40f', size: 15 },
-  Event: { color: '#e67e22', size: 12 },
-  Actor: { color: '#34495e', size: 12 },
+  Document: { color: '#5bfff7', size: 16 },
+  Article: { color: '#d3b9ff', size: 10 },
+  Clause: { color: '#c3b345', size: 9 },
+  Point: { color: '#ff8999', size: 8 },
+  Span: { color: '#d2eecf', size: 12 },
+  LegalConcept: { color: '#ffbccb', size: 12 },
+  Penalty: { color: '#e1ab23', size: 15 },
+  Event: { color: '#b5e6fe', size: 12 },
+  Actor: { color: '#9bb273', size: 12 },
   Default: { color: '#7f8c8d', size: 10 },
 };
 
 const EDGE_COLORS = {
-  REFERENCES: '#3498db',
-  DEFINES: '#2ecc71',
-  HAS_PENALTY: '#f1c40f',
-  PROHIBITS: '#e74c3c',
+  ALLOWS: '#e3abb5ff',
+  BELONGS_TO: '#eeb0a1ff',
+  DEFINES: '#92cca9ff',
+  HAS_ARTICLE: '#C4C1D9',
+  HAS_CLAUSE: '#A9C6D9',
+  HAS_PENALTY: '#f9df78ff',
+  HAS_POINT: '#bfd594ff',
+  INVOLVES: '#F2D9D0',
+  MENTIONS: '#F2E8C6',
+  PENALIZES: '#B0D1D9',
+  PROHIBITS: '#A65A53',
+  REFERENCES: '#80c3efff',
+  REGULATES: '#99BFAD',
   Default: '#cccccc'
 };
+
 
 const generateSmartLabel = (node) => {
   const type = node.type;
