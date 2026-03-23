@@ -25,8 +25,7 @@ class ResearcherAgent:
         hits = await reranker_service.rerank(query, raw_hits, top_k=5)
 
         # Graph expand dựa trên article_ids từ hits
-        # graph_ctx = await legal_tools.search_graph_references(raw_hits, limit_spans=40)
-        graph_ctx = {"owner_spans": [], "references": [], "semantics":{"concepts":[],"events":[],"actors":[],"penalties":[]}, "mention_spans":[]}  # Tạm disable Neo4j
+        graph_ctx = await legal_tools.search_graph_references(raw_hits, limit_spans=40)
 
         # Fusion: cho điểm graph-items
         def gscore(edge_type: str) -> float:

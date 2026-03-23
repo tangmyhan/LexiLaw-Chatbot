@@ -24,6 +24,19 @@ async function sendChatMessage(chatId, message) {
   return res.body;
 }
 
+async function getGraphVisualization(chatId, message) {
+  const res = await fetch(BASE_URL + `/chats/${chatId}/graph`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message })
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    return Promise.reject({ status: res.status, data });
+  }
+  return data;
+}
+
 export default {
-  createChat, sendChatMessage
+  createChat, sendChatMessage, getGraphVisualization
 };

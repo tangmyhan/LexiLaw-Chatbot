@@ -31,4 +31,13 @@ class LegalTools:
             return {"owner_spans": [], "references": [], "semantics":{"concepts":[],"events":[],"actors":[],"penalties":[]}, "mention_spans":[]}
         return await neo4j_service.expand_from_articles(article_ids, limit_spans=limit_spans)
 
+    async def get_graph_visualization(self, query: str) -> Dict[str, Any]:
+        """
+        Lấy dữ liệu visualization graph cho query
+        """
+        # Tìm kiếm Qdrant để lấy article_ids
+        initial_hits = await qdrant_legal_service.hybrid_search(query, top_k=10)
+        article_ids = await neo4j_service.article_ids_from_qdrant_hits(initial_hits)
+        return await neo4j_service.get_graph_visualization_data(article_ids)
+
 legal_tools = LegalTools()

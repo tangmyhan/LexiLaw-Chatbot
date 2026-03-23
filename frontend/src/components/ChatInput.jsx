@@ -12,22 +12,29 @@ function ChatInput({ newMessage, isLoading, setNewMessage, submitNewMessage }) {
   }
   
   return(
-    <div className='sticky bottom-0 shrink-0 bg-white py-4'>
-      <div className='p-1.5 bg-primary-blue/35 rounded-3xl z-50 font-mono origin-bottom animate-chat duration-400'>
-        <div className='pr-0.5 bg-white relative shrink-0 rounded-3xl overflow-hidden ring-primary-blue ring-1 focus-within:ring-2 transition-all'>
+    <div className='relative w-full max-w-4xl mx-auto'>
+      <div className='bg-indigo-50/50 p-2 rounded-3xl shadow-inner border border-indigo-100/50 relative overflow-hidden group transition-all duration-300 hover:bg-indigo-50/80 focus-within:bg-indigo-50'>
+        <div className='relative flex items-end bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 transition-all duration-300 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100'>
           <textarea
-            className='block w-full max-h-[140px] py-2 px-4 pr-11 bg-white rounded-3xl resize-none placeholder:text-primary-blue placeholder:leading-4 placeholder:-translate-y-1 sm:placeholder:leading-normal sm:placeholder:translate-y-0 focus:outline-hidden'
+            className='flex-1 w-full max-h-[160px] min-h-[56px] py-4 px-5 pr-14 bg-transparent resize-none placeholder:text-slate-400 placeholder:select-none text-slate-700 leading-relaxed focus:outline-none custom-scrollbar'
             ref={textareaRef}
             rows='1'
+            disabled={isLoading}
+            placeholder={isLoading ? "Đang tạo sơ đồ và phản hồi..." : "Nhập câu hỏi pháp lý của bạn..."}
             value={newMessage}
             onChange={e => setNewMessage(e.target.value)}
             onKeyDown={handleKeyDown}
           />
           <button
-            className='absolute top-1/2 -translate-y-1/2 right-3 p-1 rounded-md hover:bg-primary-blue/20'
+            className={`absolute bottom-[8px] right-[8px] p-2.5 rounded-xl transition-all duration-300 flex items-center justify-center ${
+              newMessage.trim() && !isLoading 
+                ? 'bg-gradient-to-tr from-indigo-500 to-blue-500 shadow-md hover:shadow-lg hover:-translate-y-0.5' 
+                : 'bg-slate-100 cursor-not-allowed opacity-60'
+            }`}
             onClick={submitNewMessage}
+            disabled={!newMessage.trim() || isLoading}
           >
-            <img src={sendIcon} alt='send' />
+            <img src={sendIcon} alt='send' className={`w-5 h-5 transition-transform duration-300 ${newMessage.trim() && !isLoading ? 'filter brightness-0 invert opacity-100' : 'opacity-40'}`} />
           </button>
         </div>
       </div>
