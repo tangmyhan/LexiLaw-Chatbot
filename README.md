@@ -6,28 +6,28 @@ The system leverages a modern architecture with a high-speed React/Vite Frontend
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-- 🎯 **Accurate Legal Consultation:** Provides information and answers questions based on actual labor law provisions.
-- 🎨 **Premium & Modern UI:** Optimized user experience with a **Side-by-Side layout**, allowing parallel interaction between the Chatbot frame and the Legal Graph map intuitively.
-- 🕸️ **Knowledge Graph Visualization:** Utilizes **Sigma.js** combined with **Neo4j** to vividly display and smoothly interact with the network of laws, labor codes, and related regulations.
-- 🔍 **Hybrid Search RAG:** Combines Dense Vector (semantic) and Sparse Vector (BM25 keyword) search using **Qdrant** to retrieve the most accurate context.
+- **Accurate Legal Consultation:** Provides information and answers questions based on actual labor law provisions.
+- **Premium & Modern UI:** Optimized user experience with a **Side-by-Side layout**, allowing parallel interaction between the Chatbot frame and the Legal Graph map intuitively.
+- **Knowledge Graph Visualization:** Utilizes **Sigma.js** combined with **Neo4j** to vividly display and smoothly interact with the network of laws, labor codes, and related regulations.
+- **Hybrid Search RAG:** Combines Dense Vector (semantic) and Sparse Vector (BM25 keyword) search using **Qdrant** to retrieve the most accurate context.
 - 🇻🇳 **Multilingual Re-ranking:** Uses **Cohere Rerank 3.5** to optimize search result rankings for Vietnamese/Japanese text.
-- ⚡ **Real-time Streaming:** Integrates Server-Sent Events (SSE) technology for zero-latency instant responses (typing effect).
-- 🔄 **Multi-Session Context Management:** Securely stores chat history using **Redis** to maintain context for continuous chat flows.
+- **Real-time Streaming:** Integrates Server-Sent Events (SSE) technology for zero-latency instant responses (typing effect).
+- **Multi-Session Context Management:** Securely stores chat history using **Redis** to maintain context for continuous chat flows.
 
 ---
 
-## 🛠 Technology Stack
+## Technology Stack
 
-### 🎨 Frontend (UI & Graph Visualization)
+### Frontend (UI & Graph Visualization)
 - **Core:** React 19, Vite
 - **Graph Visualization:** Sigma.js v3, Graphology, ForceAtlas2, @react-sigma
 - **Styling:** Tailwind CSS, Lucide React
 - **State Management:** Zustand, Immer, Use-immer
 - **Markdown Rendering:** React Markdown
 
-### 🧠 Backend (API, AI & Data)
+### Backend (API, AI & Data)
 - **Core:** FastAPI (Python 3.10+)
 - **LLM Engine:** OpenAI API (`gpt-4o-mini` or other models)
 - **Embeddings:** BAAI/bge-m3 (via `SentenceTransformers`)
@@ -37,7 +37,7 @@ The system leverages a modern architecture with a high-speed React/Vite Frontend
 
 ---
 
-## 📦 System Architecture (Dockerized)
+## System Architecture (Dockerized)
 
 The project is configured with Docker and Docker Compose for easy deployment through 3 main services:
 1. **Frontend:** Nginx serving React/Vite static files.
@@ -47,7 +47,7 @@ The project is configured with Docker and Docker Compose for easy deployment thr
 
 ---
 
-## 🚦 Running the Project with Docker
+## Running the Project with Docker
 
 The simplest way to run the entire project is using Docker. Please install [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) before proceeding.
 
@@ -97,7 +97,7 @@ The services will automatically install dependencies and start:
 
 ---
 
-## 💻 Running the Project Manually (Development Mode)
+## Running the Project Manually (Development Mode)
 
 If you want to debug directly without using Docker, follow these steps.
 
@@ -140,7 +140,7 @@ Open your browser and navigate to the URL announced by Vite (usually `http://loc
 
 ---
 
-## 📂 Main Source Code Structure
+## Main Source Code Structure
 
 ```text
 LawRAG/
@@ -167,7 +167,7 @@ LawRAG/
 
 ---
 
-## ⚖️ License & Disclaimer
+## License & Disclaimer
 
 Although the LexiLaw system uses advanced search technology based on Labor Law documents, AI-generated consultations are strictly **for reference purposes only**. You should cross-check and verify legality with Competent Authorities or Professional Lawyers for important decisions.
 
