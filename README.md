@@ -1,51 +1,58 @@
-# LexiLaw - Trợ lý ảo AI Tư vấn Luật Lao động Việt Nam
+# 🏛️ LexiLaw - AI Assistant & Knowledge Graph for Vietnam Labor Law
 
-LexiLaw là một hệ thống RAG (Retrieval-Augmented Generation) được thiết kế chuyên biệt để tư vấn và giải đáp các vấn đề pháp lý liên quan đến Luật Lao động Việt Nam.
+**LexiLaw** is an advanced RAG (Retrieval-Augmented Generation) system specifically designed to consult and resolve legal issues related to the Vietnam Labor Law.
 
-Hệ thống tận dụng kiến trúc hiện đại với Frontend React/Vite tốc độ cao, Backend FastAPI xử lý bất đồng bộ mượt mà và sức mạnh của các mô hình LLM hàng đầu (OpenAI).
+The system leverages a modern architecture with a high-speed React/Vite Frontend, smooth asynchronous FastAPI Backend, and the power of leading LLM models, delivering highly accurate, transparent answers fully based on current legal documents.
 
-## 🚀 Tính Năng Nổi Bật
+---
 
-- **Tư vấn Pháp luật Chính xác:** Cung cấp thông tin và giải đáp thắc mắc dựa trên các điều khoản luật lao động thực tế.
-- **Hybrid Search RAG:** Kết hợp tìm kiếm Dense Vector (ngữ nghĩa) và Sparse Vector (từ khóa BM25) bằng **Qdrant** để lấy ngữ cảnh chuẩn xác nhất.
-- **Re-ranking Đa Ngôn Ngữ:** Sử dụng **Cohere Rerank 3.5** tối ưu hóa thứ hạng kết quả tìm kiếm cho văn bản tiếng Việt.
-- **Tích Hợp Knowledge Graph (Đang phát triển):** Lưu trữ và truy vấn mối quan hệ phức tạp giữa các điều luật, quy định và chế tài bằng **Neo4j**.
-- **Hỗ trợ Streaming (SSE):** Trải nghiệm phản hồi theo thời gian thực (typing effect) không độ trễ như ChatGPT.
-- **Quản lý Ngữ cảnh Đa Phiên:** Lưu trữ lịch sử trò chuyện an toàn bằng **Redis** để duy trì ngữ cảnh cho các luồng chat liên tục.
-- **Giao Diện Trực Quan:** Thiết kế tối giản, thân thiện, dễ sử dụng, hoàn toàn tương thích trên mọi thiết bị.
+## ✨ Key Features
 
-## 🛠 Công Nghệ Sử Dụng
+- 🎯 **Accurate Legal Consultation:** Provides information and answers questions based on actual labor law provisions.
+- 🎨 **Premium & Modern UI:** Optimized user experience with a **Side-by-Side layout**, allowing parallel interaction between the Chatbot frame and the Legal Graph map intuitively.
+- 🕸️ **Knowledge Graph Visualization:** Utilizes **Sigma.js** combined with **Neo4j** to vividly display and smoothly interact with the network of laws, labor codes, and related regulations.
+- 🔍 **Hybrid Search RAG:** Combines Dense Vector (semantic) and Sparse Vector (BM25 keyword) search using **Qdrant** to retrieve the most accurate context.
+- 🇻🇳 **Multilingual Re-ranking:** Uses **Cohere Rerank 3.5** to optimize search result rankings for Vietnamese/Japanese text.
+- ⚡ **Real-time Streaming:** Integrates Server-Sent Events (SSE) technology for zero-latency instant responses (typing effect).
+- 🔄 **Multi-Session Context Management:** Securely stores chat history using **Redis** to maintain context for continuous chat flows.
 
-### Frontend
-- **Framework:** React 19, Vite
-- **Styling:** Tailwind CSS (PostCSS)
-- **State Management:** Immer, Use-immer
-- **Hiển thị văn bản:** React Markdown
+---
 
-### Backend
-- **Framework:** FastAPI (Python 3.10+)
-- **LLM:** OpenAI API (`gpt-4o-mini`)
-- **Embeddings:** BAAI/bge-m3 (qua `SentenceTransformers`)
+## 🛠 Technology Stack
+
+### 🎨 Frontend (UI & Graph Visualization)
+- **Core:** React 19, Vite
+- **Graph Visualization:** Sigma.js v3, Graphology, ForceAtlas2, @react-sigma
+- **Styling:** Tailwind CSS, Lucide React
+- **State Management:** Zustand, Immer, Use-immer
+- **Markdown Rendering:** React Markdown
+
+### 🧠 Backend (API, AI & Data)
+- **Core:** FastAPI (Python 3.10+)
+- **LLM Engine:** OpenAI API (`gpt-4o-mini` or other models)
+- **Embeddings:** BAAI/bge-m3 (via `SentenceTransformers`)
 - **Vector Database:** Qdrant (Cloud/Local)
 - **Graph Database:** Neo4j (Aura Cloud/Local)
 - **Caching & Memory:** Redis (Async)
 
-## 📦 Kiến Trúc Hệ Thống (Dockerized)
+---
 
-Dự án được cấu hình bằng Docker và Docker Compose để triển khai dễ dàng thông qua 3 dịch vụ chính:
-1. **Frontend:** Nginx phục vụ static file của React/Vite.
-2. **Backend:** FastAPI được host qua Uvicorn.
-3. **Redis:** Lưu trữ bộ nhớ cache và lịch sử chat.
-*(Lưu ý: Qdrant và Neo4j đang được thiết lập sử dụng Cloud instance nhưng có thể config để chạy local map qua `docker-compose`)*.
+## 📦 System Architecture (Dockerized)
+
+The project is configured with Docker and Docker Compose for easy deployment through 3 main services:
+1. **Frontend:** Nginx serving React/Vite static files.
+2. **Backend:** FastAPI hosted via Uvicorn.
+3. **Redis:** Caching and chat history storage.
+*(Note: Qdrant and Neo4j are configured to use Cloud instances but can be set up to run local mapping via `docker-compose`)*.
 
 ---
 
-## 🚦 Khởi Chạy Dự Án Bằng Docker
+## 🚦 Running the Project with Docker
 
-Cách đơn giản nhất để chạy toàn bộ dự án là sử dụng Docker. Hãy cài đặt [Docker](https://www.docker.com/) và [Docker Compose](https://docs.docker.com/compose/) trước khi tiếp tục.
+The simplest way to run the entire project is using Docker. Please install [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) before proceeding.
 
-### 1. Cấu hình biến môi trường
-Tạo file `.env` bên trong thư mục `backend/` với các thiết lập sau:
+### 1. Environment Variables Configuration
+Create a `.env` file inside the `backend/` directory with the following settings:
 
 ```env
 # App Config
@@ -54,17 +61,17 @@ DEBUG=False
 ALLOW_ORIGINS="*"
 
 # Qdrant Cloud / Local
-QDRANT_URL="<Mã_URL_Qdrant_Của_Bạn>"
-QDRANT_API_KEY="<API_Key_Qdrant_Của_Bạn>"
+QDRANT_URL="<Your_Qdrant_URL>"
+QDRANT_API_KEY="<Your_Qdrant_API_Key>"
 COLLECTION_NAME="legal_laws"
 VECTOR_SEARCH_TOP_K=10
 
 # OpenAi LLM
-OPENAI_API_KEY="<API_Key_OpenAI_Của_Bạn>"
+OPENAI_API_KEY="<Your_OpenAI_API_Key>"
 OPENAI_MODEL="gpt-4o-mini"
 
 # Cohere Rerank
-COHERE_API_KEY="<API_Key_Cohere_Của_Bạn>"
+COHERE_API_KEY="<Your_Cohere_API_Key>"
 
 # Redis
 REDIS_URL="redis://redis:6379/0"
@@ -76,89 +83,92 @@ NEO4J_PASSWORD="<Neo4j_Password>"
 NEO4J_DATABASE="neo4j"
 ```
 
-### 2. Triển khai với Docker Compose
+### 2. Deploy with Docker Compose
 
-Tại thư mục gốc của project (nơi chứa file `docker-compose.yml`), chạy lệnh:
+At the project's root directory (where the `docker-compose.yml` file is located), run the command:
 
 ```bash
 docker-compose up --build -d
 ```
 
-Các dịch vụ sẽ tự động cài đặt dependency và khởi chạy:
-- **Frontend** chạy tại: `http://localhost:3000`
-- **Backend API Docs** chạy tại: `http://localhost:8000/docs`
+The services will automatically install dependencies and start:
+- **Frontend** runs at: `http://localhost:3000`
+- **Backend API Docs** run at: `http://localhost:8000/docs`
 
 ---
 
-## 💻 Chạy Dự Án Thủ Công (Development Mode)
+## 💻 Running the Project Manually (Development Mode)
 
-Nếu bạn muốn debug trực tiếp không dùng Docker, hãy làm theo các bước sau.
+If you want to debug directly without using Docker, follow these steps.
 
-### 1. Khởi động Redis (Yêu cầu)
-Bạn cần một instance Redis đang chạy ở port `6379`.
-Trường hợp dùng Docker cài sẵn: `docker run -d -p 6379:6379 redis:7-alpine`
+### 1. Start Redis (Required)
+You need a running Redis instance on port `6379`.
+If using pre-installed Docker: 
+```bash
+docker run -d -p 6379:6379 redis:7-alpine
+```
 
-### 2. Chạy Backend
-Mở Terminal, di chuyển vào thư mục `backend/` và thực thi:
+### 2. Run Backend
+Open Terminal, navigate to the `backend/` directory and execute:
 
 ```bash
-# Tạo và kích hoạt môi trường ảo (Khuyên dùng)
+# Create and activate virtual environment (Recommended)
 python -m venv myenv
-source myenv/bin/activate  # Trên Windows: .\myenv\Scripts\activate
+source myenv/bin/activate  # On Windows: .\myenv\Scripts\activate
 
-# Cài đặt thư viện
+# Install libraries
 pip install -r requirements.txt
 
-# Đảm bảo bạn đã đổi dòng REDIS_URL trong file .env thành LOCAL:
+# Make sure you change the REDIS_URL line in the .env file to LOCAL:
 # REDIS_URL="redis://localhost:6379/0"
 
-# Khởi động Uvicorn
+# Start Uvicorn
 uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-### 3. Chạy Frontend
-Mở Terminal mới, di chuyển vào thư mục `frontend/` và thực thi:
+### 3. Run Frontend
+Open a new Terminal, navigate to the `frontend/` directory and execute:
 
 ```bash
-# Cài đặt thư viện Nodejs
+# Install Nodejs libraries
 npm install
 
-# Chạy server phát triển Vite
+# Run Vite development server
 npm run dev
 ```
-Mở trình duyệt truy cập url được Vite thông báo (thường là `http://localhost:5173`).
+Open your browser and navigate to the URL announced by Vite (usually `http://localhost:5173`).
 
 ---
 
-## 📂 Tổ chức mã nguồn chính
+## 📂 Main Source Code Structure
 
-```
+```text
 LawRAG/
 │
-├── frontend/                 # Giao diện người dùng
-│   ├── src/components/       # Các components React (Chatbot, Message, Input)
-│   ├── src/api/              # Các cấu hình gọi API sang Backend
-│   ├── Dockerfile            # Cấu hình container Frontend (Node + Nginx)
+├── frontend/                 # User Interface
+│   ├── src/components/       # React components: ChatUI, GraphViewer, Sidebar...
+│   ├── src/api/              # API call configurations to Backend
+│   ├── Dockerfile            # Frontend container configuration (Node + Nginx)
 │   └── package.json
 │
-├── backend/                  # API và Logic xử lý
+├── backend/                  # API and Processing Logic
 │   ├── app/
-│   │   ├── agents/           # Logic của Bot: Researcher, Router, Prompts
-│   │   ├── core/             # Cấu hình chung (.env loader, neo4j, qdrant, redis, llm)
-│   │   ├── services/         # Layer gọi model LLM, embedding, retrieval
-│   │   ├── api.py            # Khai báo các Routes / Endpoints
-│   │   └── main.py           # Init app FastAPI
-│   ├── worker/               # Mã nguồn nạp dữ liệu offline (ingest data)
-│   ├── Dockerfile            # Cấu hình container Backend (Python)
+│   │   ├── agents/           # Bot Logic: Researcher, Router, Prompts
+│   │   ├── core/             # General config (.env loader, neo4j, qdrant, redis, llm)
+│   │   ├── services/         # Layer calling LLM model, embedding, retrieval
+│   │   ├── api.py            # Routes / Endpoints declaration
+│   │   └── main.py           # Init FastAPI app
+│   ├── worker/               # Source code for offline data ingestion
+│   ├── Dockerfile            # Backend container configuration (Python)
 │   └── requirements.txt
 │
-└── docker-compose.yml        # Tích hợp dịch vụ toàn hệ thống
+└── docker-compose.yml        # System-wide service integration
 ```
 
 ---
 
-## Giấy Phép & Tuyên Bố Miễn Trừ Trách Nhiệm
+## ⚖️ License & Disclaimer
 
-Mặc dù hệ thống LexiLaw sử dụng công nghệ tìm kiếm tiên tiến dựa trên tài liệu Luật Lao động, tuy nhiên các tư vấn do AI sinh ra hoàn toàn **chỉ mang tính chất tham khảo**. Bạn nên đối chiếu và xác minh tính pháp lý với Cơ quan có thẩm quyền hoặc Luật sư chuyên gia trong các quyết định quan trọng.
+Although the LexiLaw system uses advanced search technology based on Labor Law documents, AI-generated consultations are strictly **for reference purposes only**. You should cross-check and verify legality with Competent Authorities or Professional Lawyers for important decisions.
 
-Dự án này là mã nguồn mở, phục vụ mục đích học thuật và nghiên cứu công nghệ đồ thị kiến thức (Knowledge Graph) kết hợp RAG.
+This project serves academic and research purposes to apply **GraphRAG (Knowledge Graph + RAG)** technology with an interactive interface and powerful visualization technology.
