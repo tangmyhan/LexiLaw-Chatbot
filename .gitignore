@@ -1,2 +1,6 @@
 backend/.env
 myenv
+venv
+__pycache__/
+*.py[cod]
+*$py.class

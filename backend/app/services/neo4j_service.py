@@ -111,21 +111,196 @@ class Neo4jService:
         }
 
     async def article_ids_from_qdrant_hits(self, hits: List[Any]) -> List[str]:
-        """Map Qdrant payload -> article_id used in graph."""
         ids = []
         for h in hits or []:
             md = h.payload.get("metadata", {})
             di = md.get("doc_info", {})
             hrc = md.get("hierarchy", {})
+            
+            # Lấy doc_number 
             doc_number = di.get("doc_number")
             doc_id = di.get("doc_id")
             doc_key = (doc_number or doc_id or "UNKNOWN").strip()
+            
             article_no = str(hrc.get("article_no") or "")
-            ids.append(f"{doc_key}_D{article_no}")
-        seen = set(); out=[]
-        for x in ids:
-            if x not in seen:
-                seen.add(x); out.append(x)
-        return out
+            
+            # Thêm tiền tố 'law:' để khớp với DB
+            full_id = f"law:{doc_key}_D{article_no}"
+            ids.append(full_id)
+            
+        return list(set(ids))
+
+    # async def get_graph_visualization_data(self, article_ids: List[str]) -> Dict[str, Any]:
+    #     print(f"Getting graph data for article_ids: {article_ids}")
+    #     if not article_ids:
+    #         return {"nodes": [], "edges": []}
+
+    #     # Query lấy Article và mạng lưới liên kết lân cận (Clause, Document, Concept, Penalty, vv.)
+    #     query = """
+    #     UNWIND $ids AS aid
+    #     MATCH (n:Article {article_id: aid})
+    #     OPTIONAL MATCH (n)-[r]-(m)
+    #     RETURN n, r, m
+    #     """
+        
+    #     drv = get_driver()
+    #     nodes = {}
+    #     edges = []
+
+    #     async with drv.session(**get_db()) as sess:
+    #         res = await sess.run(query, {"ids": article_ids})
+    #         async for record in res:
+    #             n = record["n"]
+    #             # Convert Neo4j Node to dict
+    #             n_props = dict(n)
+    #             n_id = n_props.get("article_id")
+                
+    #             # Lưu node nguồn
+    #             if n_id not in nodes:
+    #                 nodes[n_id] = {
+    #                     "id": n_id,
+    #                     "label": f"Điều {n_props.get('no', n_id)}", # Hiển thị 'Điều X'
+    #                     "type": "Article",
+    #                     "properties": n_props
+    #                 }
+                
+    #             # Lưu node đích và cạnh
+    #             if record["m"] and record["r"]:
+    #                 m = record["m"]
+    #                 r = record["r"]
+                    
+    #                 # Convert Neo4j Node to dict
+    #                 m_props = dict(m)
+    #                 m_id = m_props.get("article_id") or m_props.get("name_norm") or str(hash(str(m_props)))
+                    
+    #                 if m_id not in nodes:
+    #                     # Xác định type dựa trên labels
+    #                     m_labels = list(m.labels) if hasattr(m, 'labels') else []
+    #                     m_type = m_labels[0] if m_labels else "Related"
+                        
+    #                     nodes[m_id] = {
+    #                         "id": m_id,
+    #                         "label": m_props.get("name") or m_props.get("no") or m_id,
+    #                         "type": m_type,
+    #                         "properties": m_props
+    #                     }
+                    
+    #                 # Determine true edge direction
+    #                 is_n_source = (r.start_node.id == n.id)
+    #                 edge_source = n_id if is_n_source else m_id
+    #                 edge_target = m_id if is_n_source else n_id
+
+    #                 edges.append({
+    #                     "source": edge_source,
+    #                     "target": edge_target,
+    #                     "label": r.type
+    #                 })
+
+    #     result = {"nodes": list(nodes.values()), "edges": edges}
+    #     print(f"Graph data result: {len(result['nodes'])} nodes, {len(result['edges'])} edges")
+    #     return result
+
+    async def get_graph_visualization_data(self, article_ids: List[str]) -> Dict[str, Any]:
+        """
+        Truy vấn toàn bộ cấu trúc phân cấp và thực thể liên quan từ danh sách Article IDs.
+        """
+        if not article_ids:
+            return {"nodes": [], "edges": []}
+
+        # Lấy driver và cấu hình db từ helper
+        drv = get_driver()
+        db_config = get_db()
+        db_name = db_config.get("database")
+
+        query = """
+        UNWIND $ids AS aid
+        MATCH (a:Article {article_id: aid})
+        
+        // 1. Lấy toàn bộ cây cấu trúc: Document -> Article -> Clause -> Point
+        OPTIONAL MATCH p_tree = (doc:Document)-[:HAS_ARTICLE]->(a)-[:HAS_CLAUSE*0..1]->(c:Clause)-[:HAS_POINT*0..1]->(pt:Point)
+        
+        // 2. Lấy các liên kết tham chiếu (REFERENCES) giữa các Article
+        OPTIONAL MATCH p_ref = (a)-[r_ref:REFERENCES]-(other:Article)
+        
+        // 3. Lấy các thực thể Semantic nối vào các node cấu trúc
+        WITH a, p_tree, p_ref
+        OPTIONAL MATCH (structural_node)-[r_sem]->(sem)
+        WHERE (structural_node IN nodes(p_tree)) 
+        AND (sem:LegalConcept OR sem:Actor OR sem:Event OR sem:Penalty)
+        
+        // 4. Lấy các Span thuộc về các node cấu trúc
+        OPTIONAL MATCH (s:Span)-[r_span:BELONGS_TO]->(target)
+        WHERE target IN nodes(p_tree)
+
+        WITH collect(p_tree) + collect(p_ref) AS paths, 
+            collect({s: startNode(r_sem), r: r_sem, t: endNode(r_sem)}) + 
+            collect({s: s, r: r_span, t: target}) AS rels
+        
+        RETURN paths, rels
+        """
+
+        nodes = {}
+        edges = []
+
+        def add_node(node):
+            if node is None: return None
+            # Trích xuất ID: ưu tiên article_id, name_norm, hoặc ID nội bộ của Neo4j
+            n_props = dict(node)
+            node_id = n_props.get("article_id") or n_props.get("name_norm") or n_props.get("chunk_id") or str(node.id)
+            
+            if node_id not in nodes:
+                labels = list(node.labels)
+                primary_label = labels[0] if labels else "Default"
+                
+                nodes[node_id] = {
+                    "id": node_id,
+                    "label": n_props.get("no") or n_props.get("name") or n_props.get("content") or node_id,
+                    "type": primary_label,
+                    "nodeType": primary_label,
+                    "properties": n_props
+                }
+            return node_id
+
+        # Sử dụng biến 'drv' và 'db_name' đã khởi tạo ở trên
+        async with drv.session(database=db_name) as session:
+            result = await session.run(query, ids=article_ids)
+            record = await result.single()
+
+            if record:
+                # Parse các đường đi (Paths)
+                if record["paths"]:
+                    for path in record["paths"]:
+                        if path is None: continue
+                        for rel in path.relationships:
+                            s_id = add_node(rel.start_node)
+                            t_id = add_node(rel.end_node)
+                            edges.append({
+                                "source": s_id,
+                                "target": t_id,
+                                "label": rel.type
+                            })
+
+                # Parse các quan hệ rời (Rels)
+                if record["rels"]:
+                    for rel_obj in record["rels"]:
+                        if rel_obj['r'] is None: continue
+                        s_id = add_node(rel_obj['s'])
+                        t_id = add_node(rel_obj['t'])
+                        edges.append({
+                            "source": s_id,
+                            "target": t_id,
+                            "label": rel_obj['r'].type
+                        })
+
+        # Loại bỏ cạnh trùng lặp
+        unique_edges = []
+        seen_edges = set()
+        for e in edges:
+            edge_key = (e["source"], e["target"], e["label"])
+            if edge_key not in seen_edges:
+                seen_edges.add(edge_key)
+                unique_edges.append(e)
+        
+        return {"nodes": list(nodes.values()), "edges": unique_edges}
 
 neo4j_service = Neo4jService()
